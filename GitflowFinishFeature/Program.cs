@@ -85,7 +85,7 @@ namespace GitflowFinishFeature
 
                             Log.Information("Tag successfully created");
 
-                            if (o.MergeIntoDevelopmentBranch)
+                            if (o.MergeIntoDevelopmentBranch ?? false)
                             {
                                 Log.Information("Merging {ReleaseBranch} into {DevBranch}", headBranchName, o.DevelopmentBranchName);
                                 NewMerge merge = new NewMerge(o.DevelopmentBranchName, headBranchName);
@@ -95,7 +95,7 @@ namespace GitflowFinishFeature
                                     headBranchName, o.DevelopmentBranchName, mergeRequest.Sha);
                             }
 
-                            if (o.DeleteReleaseBranch)
+                            if (o.DeleteReleaseBranch ?? true)
                             {
                                 Log.Information("Deleting branch {Branch}", headBranchName);
                                 await client.Git.Reference.Delete(repo.Id, $"heads/{headBranchName}");

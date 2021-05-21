@@ -24,20 +24,29 @@ namespace GitflowFinishFeature
                 _ => string.Empty
             };
 
+            bool groupPresent = logEvent.Properties.TryGetValue(Group, out var value);
+            object actualValue = ((ScalarValue)value).Value;
+
             // If the log context property group has been set and it has not yet been stored, this is the first event
             // after it has been added to the log context. Hence, write it before the event.
-            if (logEvent.Properties.TryGetValue(Group, out var value) && string.IsNullOrEmpty(activeGroup))
-            {
-                ScalarValue scalar = (ScalarValue)value;
-                output.WriteLine($"::group::{scalar.Value}");
-                activeGroup = value.ToString();
-            }
+            bool newGroupPushed = groupPresent && string.IsNullOrEmpty(activeGroup);
             // If activeGroup has a value yet the log event doesn't have the property, it has been removed 
             // from the log context, so write the group closure message before proceeding.
-            else if (!string.IsNullOrEmpty(activeGroup) && !logEvent.Properties.ContainsKey(Group))
+            bool existingGroupDisposed = !string.IsNullOrEmpty(activeGroup) && !groupPresent;
+            // If we have an active group and the new event has a group property, but this does not match the current group,
+            // this means the original was disposed but a new group property has been added to the log context. Hence, we need
+            // to close out the old group and open a new group.
+            bool changedGroup = !string.IsNullOrEmpty(activeGroup) && groupPresent && !activeGroup.Equals(actualValue);
+
+            if (existingGroupDisposed || changedGroup)
             {
                 output.WriteLine("::endgroup::");
                 activeGroup = null;
+            }
+            if (newGroupPushed || changedGroup)
+            {
+                activeGroup = actualValue.ToString();
+                output.WriteLine($"::group::{actualValue}");
             }
 
             output.WriteLine(level + logEvent.RenderMessage());
