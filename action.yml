@@ -1,0 +1,43 @@
+name: 'Gitflow Finish Feature'
+description: '.NET-based GitHub Action to copy files over FTP.'
+branding:
+  icon: git-merge
+  color: white
+inputs:
+  pr-num:
+    description:
+      'The number of the pull request to finish.'
+    required: true
+  token:
+    description:
+      'Authentication token to allow the action to execute.'
+    required: true
+  repo-name:
+    description:
+      'The full name of the containing repository (user|org/repo).'
+    required: true
+  dev-branch-name:
+    description:
+      'The name of the development branch to merge the release branch into.'
+    required: false
+    default: 'develop'
+  del-rel-branch:
+    description:
+      'Indicates whether to delete the release branch after completing all gitflow actions.'
+    required: true
+    default: 'true'
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+  - '--pr-num'
+  - ${{ inputs.pr-num }}
+  - '--token'
+  - ${{ inputs.token }}
+  - '--repo-name'
+  - ${{ inputs.repo-name }}
+  - '--dev-branch-name'
+  - ${{ inputs.dev-branch-name }}
+  - '--del-rel-branch'
+  - ${{ inputs.del-rel-branch }}
