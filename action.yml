@@ -1,5 +1,5 @@
 name: 'Gitflow Finish Feature'
-description: '.NET-based GitHub Action to copy files over FTP.'
+description: 'GitHub Action to complete a release based off of the gitflow workflow.'
 branding:
   icon: git-merge
   color: white
@@ -14,8 +14,13 @@ inputs:
     required: true
   repo-name:
     description:
-      'The full name of the containing repository (user|org/repo).'
+      'The full name of the containing repository in the form owner/repo.'
     required: true
+  merge-into-dev:
+    description:
+      'Sets whether to merge the release branch back into the development branch automatically.'
+    required: false
+    default: 'false'
   dev-branch-name:
     description:
       'The name of the development branch to merge the release branch into.'
@@ -37,6 +42,8 @@ runs:
   - ${{ inputs.token }}
   - '--repo-name'
   - ${{ inputs.repo-name }}
+  - '--merge-into-dev'
+  - ${{ inputs.merge-into-dev }}
   - '--dev-branch-name'
   - ${{ inputs.dev-branch-name }}
   - '--del-rel-branch'
