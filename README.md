@@ -1,5 +1,12 @@
 # Gitflow Finish Release Action
-A GitHub action to complete a release based off of the gitflow workflow
+A GitHub action to complete a release based off of the gitflow workflow.
+
+Performs the following actions:
+- Validates that the PR is merged
+- Validates that the head branch matches the gitflow and semver specifications (release/major.minor.patch etc.)
+- Creates a new tag with the release version
+- (Optional) Merges the release branch back to develop
+- (Optional) Deletes the release branch
 
 
 ``` yaml
