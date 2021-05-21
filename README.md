@@ -10,6 +10,8 @@ Performs the following actions:
 
 
 ``` yaml
+name: Gitflow Finish Feature
+
 on:
   # Triggers the workflow on push or pull request events but only for the main branch
   pull_request:
