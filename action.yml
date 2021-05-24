@@ -31,6 +31,11 @@ inputs:
       'Indicates whether to delete the release branch after completing all gitflow actions.'
     required: true
     default: 'true'
+  tag-prefix:
+    description:
+      'Text to prepend to the version when creating a tag.'
+    required: false
+    default: 'v'
 
 runs:
   using: 'docker'
@@ -48,3 +53,5 @@ runs:
   - ${{ inputs.dev-branch-name }}
   - '--del-rel-branch'
   - ${{ inputs.del-rel-branch }}
+  - '--tag-prefix'
+  - ${{ inputs.tag-prefix }}

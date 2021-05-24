@@ -16,5 +16,7 @@ namespace GitflowFinishFeature
         public string DevelopmentBranchName { get; set; }
         [Option("del-rel-branch", Required = false, Default = true, HelpText = "Sets whether to delete the release branch after completing all gitflow actions.")]
         public bool? DeleteReleaseBranch { get; set; }
+        [Option("tag-prefix", Required = false, Default = "v", HelpText = "Text to prepend to the version when creating a tag.")]
+        public string TagPrefix { get; set; }
     }
 }

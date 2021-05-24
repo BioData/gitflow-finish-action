@@ -61,7 +61,7 @@ namespace GitflowFinishFeature
                             group = LogContext.PushProperty(Group, "Applying Gitflow actions");
 
                             string version = m.Groups["fullversion"].Value;
-                            string tagText = 'v' + version;
+                            string tagText = o.TagPrefix + version;
                             Log.Information("Valid gitflow and semver branch name found; tag will be created with {Version}", version);
 
                             Log.Information("Getting branch information for {Branch}", headBranchName);
