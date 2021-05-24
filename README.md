@@ -19,7 +19,7 @@ on:
     types: [closed]
 
 jobs:
-  build:
+  gitflow-finish:
     runs-on: ubuntu-latest
     steps:
       - uses: mdwhitten/gitflow-finish-release-action@v1.0.0
