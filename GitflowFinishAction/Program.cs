@@ -7,12 +7,12 @@ using CommandLine;
 using Serilog.Events;
 using Serilog.Context;
 
-namespace GitflowFinishFeature
+namespace GitflowFinishAction
 {
     partial class Program
     {
         // Adapted from https://semver.org/
-        const string semverRegex = @"release\/v?(?<fullversion>(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)"
+        const string semverRegex = @"(?<branchtype>release|hotfix)\/v?(?<fullversion>(?<major>0|[1-9]\d*)\.(?<minor>0|[1-9]\d*)\.(?<patch>0|[1-9]\d*)"
                                  + @"(?:-(?<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))"
                                  + @"?(?:\+(?<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?)$";
         const string Group = GithubActionWorkflowFormatter.Group;
@@ -79,7 +79,7 @@ namespace GitflowFinishFeature
                                 Tag = tagText
                             };
 
-                            Log.Information("Creating new tag {Tag} on branch {BaseBranch} at commit {Commit}", version, baseBranchName, mergeSha);
+                            Log.Information("Creating new tag {Tag} on branch {BaseBranch} at commit {Commit}", tagText, baseBranchName, mergeSha);
                             var result = await client.Git.Tag.Create(repo.Id, newTag);
                             await client.Git.Reference.Create(repo.Id, new NewReference($"refs/tags/{result.Tag}", result.Sha));
 
@@ -95,7 +95,7 @@ namespace GitflowFinishFeature
                                     headBranchName, o.DevelopmentBranchName, mergeRequest.Sha);
                             }
 
-                            if (o.DeleteReleaseBranch ?? true)
+                            if (o.DeleteSourceBranch ?? true)
                             {
                                 Log.Information("Deleting branch {Branch}", headBranchName);
                                 await client.Git.Reference.Delete(repo.Id, $"heads/{headBranchName}");
@@ -109,12 +109,14 @@ namespace GitflowFinishFeature
                     }
                     else
                     {
-                        Log.Warning("Pull request {Num} has not been merged. No actions will be taken.", pullRequest.Number);
+                        Log.Error("Pull request {Num} has not been merged. No actions will be taken.", pullRequest.Number);
+                        returnCode = -1;
                     }
-                }
+                    }
                 else
                 {
                     Log.Error("Invalid repository name passed; repository name should be of format \"owner/repo-name\"");
+                    returnCode = -1;
                 }
             }
             catch (Exception ex)

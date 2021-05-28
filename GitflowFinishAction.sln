@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31313.79
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitflowFinishFeature", "GitflowFinishFeature\GitflowFinishFeature.csproj", "{D67DCFE7-A9B0-4FC1-830C-069D35D73F60}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitflowFinishAction", "GitflowFinishAction\GitflowFinishAction.csproj", "{D67DCFE7-A9B0-4FC1-830C-069D35D73F60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
